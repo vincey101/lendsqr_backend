@@ -11,5 +11,21 @@ export const register = async (req: Request, res: Response) => {
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error: any) {
         res.status(500).json({ message: 'Error registering user', error: error.message });
+    }  
+};
+
+export const fundAccount = async (req: Request, res: Response) => {
+    const { userId, amount } = req.body;
+
+    try {
+        const userExists = await User.userExists(userId);
+        if (!userExists) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        await User.updateBalance(userId, amount);
+        res.status(200).json({ message: 'Account funded successfully' });
+    } catch (error: any) {
+        res.status(500).json({ message: 'Error funding account', error: error.message });
     }
 };
