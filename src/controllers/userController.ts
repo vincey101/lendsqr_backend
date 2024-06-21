@@ -47,3 +47,24 @@ export const transfer = async (req: Request, res: Response) => {
         res.status(500).json({ message: 'Error transferring funds', error: error.message });
     }
 };
+export const withdraw = async (req: Request, res: Response) => {
+    const { userId, amount } = req.body;
+
+    try {
+        const userExists = await User.userExists(userId);
+        if (!userExists) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        await User.deductBalance(userId, amount);
+        res.status(200).json({ message: 'Withdrawal successful' });
+    } catch (error: any) {
+        if (error.message === 'Insufficient funds') {
+            res.status(400).json({ message: 'Insufficient funds' });
+        } else if (error.message === 'User not found') {
+            res.status(404).json({ message: 'User not found' });
+        } else {
+            res.status(500).json({ message: 'Error withdrawing funds', error: error.message });
+        }
+    }
+};
