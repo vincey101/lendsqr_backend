@@ -1,27 +1,73 @@
 import { Request, Response } from 'express';
 import UserModel from '../models/userModel';
 import bcrypt from 'bcrypt';
-import { generateToken, validateToken } from '../middleware/fauxAuth';
+import axios from 'axios';
+import { generateToken } from '../middleware/fauxAuth';
+
+
+
+const KARMA_API_KEY = process.env.KARMA_API_KEY;
+const KARMA_API_URL = process.env.KARMA_API_URL;
+
+
+
+const onboardUser = async (email: string, password: string) => {
+    const existingUser = await UserModel.getUserByEmail(email);
+    if (existingUser) {
+        throw new Error('User already exists');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await UserModel.createUser({ email, password: hashedPassword, balance: 0 });
+
+    const token = generateToken(email);
+    return token;
+};
 
 export const register = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     try {
-        const existingUser = await UserModel.getUserById(email);
-        if (existingUser) {
-            return res.status(400).json({ message: 'User already exists' });
+        const karmaUrl = `${KARMA_API_URL}/${encodeURIComponent(email)}`;
+
+        const response = await axios.get(karmaUrl, {
+            headers: {
+                Authorization: `Bearer ${KARMA_API_KEY}`
+            }
+        });
+
+        const karmaStatus = response.data.status;
+        const karmaMessage = response.data.message;
+
+        // Check if the user is in the Karma blacklist
+        if (karmaStatus === 'success' && karmaMessage === 'Identity not found in karma') {
+            const token = await onboardUser(email, password);
+            return res.status(201).json({ message: 'User registered successfully', token });
+        } else {
+            return res.status(400).json({ message: 'User is blacklisted and cannot be onboarded', error: response.data });
+        }
+    } catch (error: any) {
+        if (axios.isAxiosError(error) && error.response) {
+            const status = error.response.status;
+            const data = error.response.data;
+
+            if (status === 404 && data.message === 'Identity not found in karma') {
+                try {
+                    const token = await onboardUser(email, password);
+                    return res.status(201).json({ message: 'User registered successfully', token });
+                } catch (onboardError:any) {
+                    return res.status(400).json({ message: onboardError.message });
+                }
+            }
+
+            return res.status(status).json({ message: 'Error checking Karma blacklist', error: data });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-        await UserModel.createUser({ email, password: hashedPassword, balance: 0 });
-
-        const token = await generateToken(email);
-
-        res.status(201).json({ message: 'User registered successfully', token });
-    } catch (error: any) {
-        res.status(500).json({ message: 'Error registering user', error: error.message });
+        console.error('Error:', error.message);
+        return res.status(500).json({ message: 'Error registering user', error: error.message });
     }
 };
+
 
 export const fundAccount = async (req: Request, res: Response) => {
     const { userId, amount } = req.body;

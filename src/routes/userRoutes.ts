@@ -5,7 +5,6 @@ import { validateToken } from '../middleware/fauxAuth';
 const router = Router();
 
 router.post('/register', register);
-
 router.post('/fund', validateToken, fundAccount);
 router.post('/transfer', validateToken, transfer); 
 router.post('/withdraw', validateToken, withdraw); 

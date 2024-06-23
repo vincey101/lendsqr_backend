@@ -15,6 +15,11 @@ class UserModel {
     static async getUserById(userId: number): Promise<User | undefined> {
         return await knex('users').where({ id: userId }).first();
     }
+    
+    static async getUserByEmail(email: string): Promise<User | undefined> {
+        return await knex('users').where({ email }).first();
+    }
+
 
     static async userExists(userId: number): Promise<boolean> {
         const user = await knex('users').where({ id: userId }).first();
