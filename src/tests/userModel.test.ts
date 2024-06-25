@@ -52,7 +52,7 @@ describe('UserModel', () => {
         expect(knex().where).toHaveBeenCalledWith({ id: userId });
         expect(knex().first).toHaveBeenCalled();
     });
-    
+
 
     it('should fund user', async () => {
         const userId = 1;
@@ -60,6 +60,22 @@ describe('UserModel', () => {
         await UserModel.updateBalance(userId, amount);
         expect(knex().where).toHaveBeenCalledWith({ id: userId });
         expect(knex().increment).toHaveBeenCalledWith('balance', amount);
+    });
+
+    it('should deduct user balance', async () => {
+        const userId = 1;
+        const amount = 50;
+
+        const user = { id: userId, balance: 100 };
+
+        (knex().where as jest.Mock).mockReturnValueOnce({
+            first: jest.fn().mockResolvedValueOnce(user),
+        });
+
+        await UserModel.deductBalance(userId, amount);
+
+        expect(knex().where).toHaveBeenCalledWith({ id: userId });
+        expect(knex().decrement).toHaveBeenCalledWith('balance', amount);
     });
 
 });
