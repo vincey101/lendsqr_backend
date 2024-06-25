@@ -52,7 +52,15 @@ describe('UserModel', () => {
         expect(knex().where).toHaveBeenCalledWith({ id: userId });
         expect(knex().first).toHaveBeenCalled();
     });
+    
 
+    it('should fund user', async () => {
+        const userId = 1;
+        const amount = 100;
+        await UserModel.updateBalance(userId, amount);
+        expect(knex().where).toHaveBeenCalledWith({ id: userId });
+        expect(knex().increment).toHaveBeenCalledWith('balance', amount);
+    });
 
 });
 
