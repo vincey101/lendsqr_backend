@@ -32,6 +32,20 @@ describe('UserModel', () => {
         expect(knex().insert).toHaveBeenCalledWith(user);
     });
 
+    it('should get a user by id', async () => {
+        const userId = 1;
+        await UserModel.getUserById(userId);
+        expect(knex().where).toHaveBeenCalledWith({ id: userId });
+        expect(knex().first).toHaveBeenCalled();
+    });
+
+    it('should get a user by email', async () => {
+        const email = 'test@example.com';
+        await UserModel.getUserByEmail(email);
+        expect(knex().where).toHaveBeenCalledWith({ email });
+        expect(knex().first).toHaveBeenCalled();
+    });
+
 
 });
 
