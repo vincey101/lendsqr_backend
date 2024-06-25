@@ -136,7 +136,8 @@ Response:
 }
 
 ## E-R Diagram
-![E-R Diagram](src/images/design.png)
+![Alt text](src/images/design.png)
+
 
 Tool: DB Designer.
 
@@ -152,8 +153,4 @@ balance: Decimal, default is 0.
 ### Tokens Table
 token: Primary key.
 email: Not nullable, references the email in the users table.
-License
-This project is licensed under the MIT License. See the LICENSE file for details.
 
-## License
-This project is licensed under the MIT License. See the LICENSE file for details.
