@@ -65,6 +65,8 @@ The server should now be running on http://localhost:8080.
 The database configuration is defined in the knexfile.js file. It includes separate configurations for development, testing, and production environments.
 
 ### Available Endpoints
+
+```bash
 User Endpoints
 1. Register User
 POST /register
@@ -136,8 +138,11 @@ Response:
   "message": "Withdrawal successful"
 }
 
+```
+
+
 ## E-R Diagram
-![Alt text](https://ibb.co/R2zxngL)
+![Alt text](src/images/design.png)
 
 
 
@@ -145,6 +150,8 @@ Tool: DB Designer.
 
 E-R Diagram Details
 The E-R diagram for the Lendsqr API consists of two main entities: users and tokens.
+
+```bash
 
 ### Users Table
 id: Primary key, auto-incremented.
@@ -156,3 +163,4 @@ balance: Decimal, default is 0.
 token: Primary key.
 email: Not nullable, references the email in the users table.
 
+```
