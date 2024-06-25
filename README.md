@@ -142,8 +142,8 @@ Response:
 
 
 ## E-R Diagram
-![Alt text](src/images/design.png)
 
+![Alt text](https://ibb.co/R2zxngL)
 
 
 Tool: DB Designer.
