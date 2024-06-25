@@ -9,7 +9,6 @@ Welcome to the Lendsqr Backend Test API documentation! This document provides an
 3. [Database Configuration](#database-configuration)
 4. [Available Endpoints](#available-endpoints)
 5. [E-R Diagram](#e-r-diagram)
-6. [License](#license)
 
 ## Introduction
 
@@ -59,6 +58,8 @@ npx knex migrate:latest
 npm run dev
 
 The server should now be running on http://localhost:8080.
+
+```
 
 ## Database Configuration
 The database configuration is defined in the knexfile.js file. It includes separate configurations for development, testing, and production environments.
