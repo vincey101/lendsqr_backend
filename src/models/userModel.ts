@@ -15,11 +15,10 @@ class UserModel {
     static async getUserById(userId: number): Promise<User | undefined> {
         return await knex('users').where({ id: userId }).first();
     }
-    
+
     static async getUserByEmail(email: string): Promise<User | undefined> {
         return await knex('users').where({ email }).first();
     }
-
 
     static async userExists(userId: number): Promise<boolean> {
         const user = await knex('users').where({ id: userId }).first();
@@ -33,7 +32,7 @@ class UserModel {
     }
 
     static async transferFunds(fromUserId: number, toUserId: number, amount: number): Promise<void> {
-        await knex.transaction(async trx => {
+        await knex.transaction(async (trx) => {
             const fromUser = await trx('users').where({ id: fromUserId }).first();
             const toUser = await trx('users').where({ id: toUserId }).first();
 
@@ -50,6 +49,7 @@ class UserModel {
         });
     }
 
+
     static async deductBalance(userId: number, amount: number): Promise<void> {
         const user = await knex('users').where({ id: userId }).first();
         if (!user) {
@@ -65,4 +65,3 @@ class UserModel {
 }
 
 export default UserModel;
-
