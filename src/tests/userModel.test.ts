@@ -46,6 +46,13 @@ describe('UserModel', () => {
         expect(knex().first).toHaveBeenCalled();
     });
 
+    it('should check if a user exists', async () => {
+        const userId = 1;
+        await UserModel.userExists(userId);
+        expect(knex().where).toHaveBeenCalledWith({ id: userId });
+        expect(knex().first).toHaveBeenCalled();
+    });
+
 
 });
 
