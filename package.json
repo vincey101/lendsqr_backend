@@ -7,7 +7,9 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "test": "jest",
-    "dev": "ts-node src/server.ts"
+    "dev": "ts-node src/server.ts",
+    "postinstall": "npm run build"
+
   },
   "keywords": [],
   "author": "",
@@ -34,6 +36,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "knex": "^3.1.0",
-    "mysql2": "^3.10.1"
+    "mysql2": "^3.10.1",
+    "pg": "^8.12.0"
   }
 }
